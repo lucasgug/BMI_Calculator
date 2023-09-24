@@ -17,8 +17,11 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,25 +31,49 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lucasgugliuzza.bmi_calculator.theme.Orange
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BMIScreen() {
 
+    val corroutinesScope = rememberCoroutineScope()
+
+    val modalBottonSheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        skipHalfExpanded = true
+    )
 
     ModalBottomSheetLayout(
+        sheetState = modalBottonSheetState,
         sheetContent = {
-
+            BottomSheetContent(
+                sheetTitle = "Height",
+                sheetItemList = listOf("Kilogram","Pounds"),
+                onItemClicked = {},
+                onCancelClicked = {}
+            )
         },
         content = { //contenido principal de la pantalla
-            ScreenContent()
+            ScreenContent(
+                onWeightTextClicked = {
+                    corroutinesScope.launch { modalBottonSheetState.show()
+                }},
+
+                onHeightTextClicked = {
+                    corroutinesScope.launch { modalBottonSheetState.show() }
+                }
+            )
         }
     )
 
 }
 
 @Composable
-fun ScreenContent() {
+fun ScreenContent(
+    onWeightTextClicked : () ->Unit,
+    onHeightTextClicked : () ->Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -77,7 +104,7 @@ fun ScreenContent() {
             ) {
                 UnitItem(
                     text = "Weight",
-                    onClick = {}
+                    onClick = {onWeightTextClicked()}
                 )
 
                 InputUnitValue(
@@ -107,7 +134,7 @@ fun ScreenContent() {
                     inputValue = "170",
                     inputUnit = "Centimeters",
                     inputColor = Orange ,
-                    onUnitValueClicked = {}
+                    onUnitValueClicked = { onHeightTextClicked() }
                 )
 
             }

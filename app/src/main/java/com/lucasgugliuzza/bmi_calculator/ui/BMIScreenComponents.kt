@@ -307,17 +307,25 @@ fun ShareButton(
 }
 
 @Composable
-fun BottomSheetContent() {
+fun BottomSheetContent(
+    sheetTitle:String,
+    sheetItemList : List<String>,
+    onItemClicked : (String) -> Unit,
+    onCancelClicked : () -> Unit
+) {
     Text(
-        text = "Height",
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp),
+        text = sheetTitle ,
         fontWeight = FontWeight.Bold,
         textAlign = TextAlign.Center
     )
-    listOf("Kilograms","Pounds").forEach{
+        sheetItemList.forEach{
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { }
+                .clickable { onItemClicked(it)  }
         ) {
             Text(text = it , modifier = Modifier.padding(15.dp))
         }
@@ -326,7 +334,7 @@ fun BottomSheetContent() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(20.dp),
-        onClick = { /*TODO*/ },
+        onClick = { onCancelClicked() },
         colors = ButtonDefaults.buttonColors(
             contentColor = Color.Black,
             backgroundColor = Color.LightGray
@@ -340,5 +348,8 @@ fun BottomSheetContent() {
 @Preview(showBackground = true)
 @Composable
 fun UnitItemPreview() {
+    Column {
+
+    }
 
 }
